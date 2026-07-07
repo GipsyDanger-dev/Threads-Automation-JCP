@@ -1,0 +1,24 @@
+{
+  "name": "workflow-1-generate",
+  "description": "Generate draft konten Threads dari template dan data input.",
+  "trigger": {
+    "type": "manual"
+  },
+  "steps": [
+    {
+      "id": "collect-input",
+      "type": "input",
+      "label": "Ambil brief konten"
+    },
+    {
+      "id": "generate-draft",
+      "type": "ai.generate",
+      "label": "Buat draft konten"
+    },
+    {
+      "id": "save-draft",
+      "type": "storage.save",
+      "label": "Simpan hasil draft"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "workflow-2-approval-edit",
+  "description": "Approval dan edit manual sebelum konten dipublikasikan.",
+  "trigger": {
+    "type": "event",
+    "event": "draft.ready"
+  },
+  "steps": [
+    {
+      "id": "send-approval",
+      "type": "notify.telegram",
+      "label": "Kirim notifikasi approval"
+    },
+    {
+      "id": "wait-response",
+      "type": "human.approval",
+      "label": "Tunggu keputusan"
+    },
+    {
+      "id": "apply-edit",
+      "type": "content.edit",
+      "label": "Edit jika diperlukan"
+    },
+    {
+      "id": "publish",
+      "type": "publish.threads",
+      "label": "Publikasikan konten"
+    }
+  ]
+}
