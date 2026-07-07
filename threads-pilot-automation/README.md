@@ -2,6 +2,12 @@
 
 Automation showcase untuk publikasi Threads: generate draft, approval via Telegram, edit manual / AI, lalu publish ke Threads secara terkontrol.
 
+![Status](https://img.shields.io/badge/status-demo%20showcase-1f7a8c?style=for-the-badge)
+![Workflow](https://img.shields.io/badge/workflows-2%20core%20flows-2c7a7b?style=for-the-badge)
+![Platform](https://img.shields.io/badge/platform-Threads%20%2B%20Telegram-3b82f6?style=for-the-badge)
+
+Repo ini merangkum satu pipeline konten yang utuh: ide dipilih otomatis, draft dibuat, manusia memberi approval, lalu konten dipublish lewat flow yang bisa diaudit.
+
 Project ini dibuat untuk mendemokan alur kerja konten yang rapi dari awal sampai tayang. Fokusnya bukan sekadar menyimpan file workflow, tapi menunjukkan bagaimana satu ide konten bisa:
 
 1. dibuat otomatis dari jadwal dan persona,
