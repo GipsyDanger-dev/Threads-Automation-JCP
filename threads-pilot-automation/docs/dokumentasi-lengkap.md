@@ -30,7 +30,7 @@ Project ini mendokumentasikan alur automation untuk menyiapkan draft konten Thre
 
 ## Dokumen Pendukung
 
-- `workflows/workflow-1-generate.json`
-- `workflows/workflow-2-approval-edit.json`
+- `workflows/Workflow 1.json`
+- `workflows/Workflow 2.json`
 - `database/schema.sql`
 - `docs/screenshots/`

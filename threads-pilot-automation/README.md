@@ -8,8 +8,8 @@ Repo ini adalah showcase untuk automation flow Threads yang siap dipamerkan di G
 threads-pilot-automation/
 ├── README.md
 ├── workflows/
-│   ├── workflow-1-generate.json
-│   └── workflow-2-approval-edit.json
+│   ├── Workflow 1.json
+│   └── Workflow 2.json
 ├── docs/
 │   ├── dokumentasi-lengkap.md
 │   ├── pitch-deck.pdf

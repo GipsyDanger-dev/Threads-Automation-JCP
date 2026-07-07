@@ -1,0 +1,830 @@
+{
+  "name": "My workflow 7",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8,12,16 * * *"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        2064,
+        2800
+      ],
+      "id": "ce8306e1-23c4-477f-8453-603b2595a9e8",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "angle_schedule",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "day_of_week",
+              "keyValue": "={{ $json.day_of_week }}"
+            },
+            {
+              "keyName": "time_slot",
+              "keyValue": "={{ $json.time_slot }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        2992
+      ],
+      "id": "80e9e99a-4a94-44a4-ac86-a15e57843093",
+      "name": "Get a row3",
+      "credentials": {
+        "supabaseApi": {
+          "id": "Gqiq964aMi6dKIob",
+          "name": "Personal Brand"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "drafts",
+        "matchType": "allFilters",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "status",
+              "condition": "eq",
+              "keyValue": "pending_approval"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2272,
+        2992
+      ],
+      "id": "c1d8651a-c6d1-4ccd-819d-470931ab9ae7",
+      "name": "Get many rows5",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "Gqiq964aMi6dKIob",
+          "name": "Personal Brand"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ce2b1367-7ada-4dac-b58a-802d67280c21",
+              "leftValue": "={{ $json.is_full }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "false",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2272,
+        3184
+      ],
+      "id": "df0036cd-9de0-4c33-a890-4fad26ad82ec",
+      "name": "If5"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "tableId": "persona_pillar",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "pillar_name",
+              "keyValue": "pilot_pesawat"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        3360
+      ],
+      "id": "8d19e645-f507-4145-bbe0-8b5a4ae93c03",
+      "name": "Get a row4",
+      "credentials": {
+        "supabaseApi": {
+          "id": "Gqiq964aMi6dKIob",
+          "name": "Personal Brand"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "history",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "angle",
+              "condition": "eq",
+              "keyValue": "={{ $('Get a row3').item.json.angle }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2272,
+        3360
+      ],
+      "id": "dc059427-6421-45b3-a4de-c555e438ce3c",
+      "name": "Get many rows6",
+      "alwaysOutputData": true,
+      "credentials": {
+        "supabaseApi": {
+          "id": "Gqiq964aMi6dKIob",
+          "name": "Personal Brand"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all().map(i => {\n  const topic = i.json.response && i.json.response.output && i.json.response.output.topic;\n  return `- ${topic || 'topik tidak diketahui'}`;\n}).join('\\n');\n\nreturn [{ json: { history_text: items || 'Belum ada history.' } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2624,
+        3360
+      ],
+      "id": "8a21f176-f8f9-439c-a702-cc920190dee8",
+      "name": "Code in JavaScript9"
+    },
+    {
+      "parameters": {
+        "options": {
+          "temperature": 1
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        2528,
+        2736
+      ],
+      "id": "8711fa7a-a783-4e84-b93f-a0b55d7aff91",
+      "name": "Google Gemini Chat Model5",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YDqY0FNDYytLI6Re",
+          "name": "JCP"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"topic\": {\"type\": \"string\"},\n    \"sudut_pandang\": {\"type\": \"string\"}\n  },\n  \"required\": [\"topic\", \"sudut_pandang\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2704,
+        2736
+      ],
+      "id": "da7ed777-bed8-4b4c-8bb8-8af7916a0a31",
+      "name": "Structured Output Parser4"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.1-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        2896,
+        2736
+      ],
+      "id": "6b5ec55e-19d4-406b-a610-5e01b69dd774",
+      "name": "Google Gemini Chat Model6",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "lWY5WPeKXy9jHK2I",
+          "name": "JCP2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.1-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        3232,
+        2736
+      ],
+      "id": "22ebdb06-4a85-4be1-b3fa-6b8752eafbdb",
+      "name": "Google Gemini Chat Model7",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "N6GrNo9nb4psczpI",
+          "name": "JCP4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Kamu adalah content strategist untuk akun Threads persona pilot komersial.\n\nPersona: {{ $('Get a row4').item.json.persona_text }}\nTone rules: {{ $('Get a row4').item.json.tone_rules }}\nAngle hari ini: {{ $('Get a row3').item.json.angle }}\n\nTopik yang SUDAH pernah dibahas (jangan diulang):\n{{ $('Code in JavaScript9').item.json.history_text }}\n\nTentukan SATU topik spesifik dan sudut pandang baru dalam angle ini, yang belum ada di daftar di atas.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2544,
+        2544
+      ],
+      "id": "a73e397a-7807-49b3-a896-e595e8550481",
+      "name": "AI Agent Strategist1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Revisi tiap post dalam thread berikut (array, urut):\n{{ $('AI Agent Writer1').item.json.output.posts }}\n\nAturan revisi (berlaku ke SEMUA post dalam array):\n- Gaya bicara konsisten dengan persona (santai, pakai \"saya\", kredibel sebagai pilot)\n- HAPUS semua referensi waktu spesifik (pagi/siang/sore/hari ini/minggu ini/dst)\n- Tiap post maksimal 480 karakter\n- Jumlah post dalam array HARUS tetap sama seperti input\n- Output HARUS tetap berupa array of string",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        3248,
+        2544
+      ],
+      "id": "d5281d24-cd39-4e5b-b3e0-3c9229f201de",
+      "name": "AI Agent Editor1"
+    },
+    {
+      "parameters": {
+        "tableId": "drafts",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "pillar_name",
+              "fieldValue": "={{ $('Get a row3').item.json.pillar_name }}"
+            },
+            {
+              "fieldId": "angle",
+              "fieldValue": "={{ $('Get a row3').item.json.angle }}"
+            },
+            {
+              "fieldId": "topic",
+              "fieldValue": "={{ $('Get a row3').item.json.angle }}"
+            },
+            {
+              "fieldId": "status",
+              "fieldValue": "pending_approval"
+            },
+            {
+              "fieldId": "scheduled_time",
+              "fieldValue": "={{ $now.toISO() }}"
+            },
+            {
+              "fieldId": "isi_caption",
+              "fieldValue": "= {{ $json }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        2880,
+        3008
+      ],
+      "id": "9fac9c0e-659f-4259-82c6-ba87495f2057",
+      "name": "Create a row2",
+      "credentials": {
+        "supabaseApi": {
+          "id": "Gqiq964aMi6dKIob",
+          "name": "Personal Brand"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Kamu menulis sebagai pilot komersial di akun Threads pribadi.\n\nPersona: {{ $('Get a row4').item.json.persona_text }}\nTone rules: {{ $('Get a row4').item.json.tone_rules }}\nContoh gaya bicara asli (rujukan NADA & STRUKTUR kalimat saja,\nJANGAN tiru topiknya):\n{{ $('Get a row4').item.json.style_examples }}\n\nAngle: {{ $('Get a row3').item.json.angle }}\nTopik: {{ $('AI Agent Strategist1').item.json.output.topic }}\nSudut pandang: {{ $('AI Agent Strategist1').item.json.output.sudut_pandang }}\n\nATURAN GAYA PENULISAN (WAJIB DIPATUHI):\n- Tulis seolah manusia asli mengetik cepat di HP, bukan menulis esai yang di-polish\n- Ritme kalimat pendek-panjang yang natural, seperti orang bercerita lisan lalu dituliskan\n- Boleh ada kalimat pendek terputus, boleh kurang formal, jangan terlalu rapi/simetris\n- JANGAN gunakan metafora atau bahasa puitis/dramatis berlebihan\n- JANGAN gunakan struktur \"pembuka indah - isi - penutup pertanyaan template\"\n- HINDARI kata/frasa ini: \"menariknya\", \"yang jelas\", \"seperti yang kita tahu\",\n  \"rasanya kok...aneh sekali\", titik-titik \"...\" untuk efek dramatis, kalimat\n  retoris yang kedengaran dibuat-buat\n- Kalau mau nutup dengan pertanyaan ke pembaca, buat singkat & natural, bukan\n  kalimat panjang yang kedengaran seperti template caption sosmed\n- Pakai \"saya\", orang pertama, bahasa Indonesia santai-formal (bukan gaul/receh)\n\nTUGAS:\nTulis draft THREAD Threads (BUKAN 1 post tunggal), berdasarkan topik dan\nsudut pandang di atas. Pecah jadi 3-5 post berurutan yang saling menyambung\nseperti orang cerita panjang tapi dipecah-pecah, dengan alur:\n- Post pertama: hook/pembuka yang bikin orang penasaran lanjut baca\n- Post tengah: isi cerita/poin, boleh 1-3 post tergantung panjang cerita\n- Post terakhir: penutup natural (bisa refleksi singkat atau pertanyaan santai\n  ke pembaca, JANGAN template)\n\nTiap post harus berdiri sendiri secara ritme kalimat tapi nyambung isi antar\npost (bukan potongan kalimat yang dipenggal paksa).\nTiap post maksimal 480 karakter.\n\nOutput HARUS berupa array of string, urut sesuai alur cerita (elemen 0 = post\npertama, dst).",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        2912,
+        2544
+      ],
+      "id": "2012a4f9-0b3e-4f2b-be52-2cb909ffcd2e",
+      "name": "AI Agent Writer1"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"posts\": {\n      \"type\": \"array\",\n      \"items\": { \"type\": \"string\" }\n    }\n  },\n  \"required\": [\"posts\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        3072,
+        2736
+      ],
+      "id": "bf425f36-7ba5-4632-b62a-d7b34509c903",
+      "name": "Structured Output Parser5"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2880,
+        3360
+      ],
+      "id": "99a20b5a-83ec-420e-8763-6a02fd4fd163",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "name": "Replace Me1",
+      "typeVersion": 1,
+      "position": [
+        3120,
+        3552
+      ],
+      "id": "66f0bd78-ef96-4c5f-a102-14031956d29c",
+      "placeholder": true
+    },
+    {
+      "parameters": {
+        "tableId": "thread_posts",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "draft_id",
+              "fieldValue": "={{ $json.draft_id }}"
+            },
+            {
+              "fieldId": "post_order",
+              "fieldValue": "={{ $json.post_order }}"
+            },
+            {
+              "fieldId": "content",
+              "fieldValue": "={{ $json.content }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        3120,
+        3312
+      ],
+      "id": "730ac685-6db1-4d6c-b6aa-1c46052f1737",
+      "name": "Create a row3",
+      "credentials": {
+        "supabaseApi": {
+          "id": "Gqiq964aMi6dKIob",
+          "name": "Personal Brand"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Ambil SEMUA post dari Code in JavaScript3 (sekarang multi-item, 1 post per item)\nconst posts = $('Code in JavaScript12').all().map(item => item.json);\n\nif (!posts || posts.length === 0) {\n  throw new Error('Tidak ada posts dari Code in JavaScript3');\n}\n\n// Susun preview text: nomori tiap post biar jelas ini thread multi-post\nconst previewText = posts\n  .sort((a, b) => a.post_order - b.post_order)\n  .map((p, i) => `${i + 1}/${posts.length}\\n${p.content}`)\n  .join('\\n\\n---\\n\\n');\n\nconst angle = posts[0].angle;\nconst topic = posts[0].topic;\n\n// draft_id dari node Create a row\nconst draftId = $('Create a row2').item.json.id;\n\nreturn [{\n  json: {\n    preview_text: previewText,\n    angle: angle,\n    topic: topic,\n    draft_id: draftId\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3328,
+        3312
+      ],
+      "id": "f2f3aa30-df8e-4091-b54d-a5a545390c00",
+      "name": "Code in JavaScript11"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"posts\": {\n      \"type\": \"array\",\n      \"items\": { \"type\": \"string\" }\n    }\n  },\n  \"required\": [\"posts\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        3392,
+        2736
+      ],
+      "id": "722ec44f-6647-4368-9f4b-e35ab71d2ff4",
+      "name": "Structured Output Parser6"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://api.telegram.org/bot' + $env.TELEGRAM_BOT_TOKEN + '/sendMessage' }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chat_id\": {{ JSON.stringify($env.TELEGRAM_CHAT_ID) }},\n\"text\": {{ JSON.stringify($json.preview_text || 'Preview tidak tersedia') }},\n  \"reply_markup\": {\n    \"inline_keyboard\": [\n      [\n        { \"text\": \"✅ Approve\", \"callback_data\": \"approve_{{ $json.draft_id }}\" },\n        { \"text\": \"✏️ Edit\", \"callback_data\": \"edit_{{ $json.draft_id }}\" },\n        { \"text\": \"❌ Reject\", \"callback_data\": \"reject_{{ $json.draft_id }}\" }\n      ]\n    ]\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        3536,
+        3312
+      ],
+      "id": "06f2b397-ed53-4c4c-8886-2eac038d1bbe",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const parentId = $('Create a row2').item.json.id;\nconst parentData = $('Code in JavaScript13').item.json; // sesuaikan nama node\n\nconst posts = parentData.posts || [];\n\nreturn posts.map((content, index) => ({\n  json: {\n    draft_id: parentId,\n    content: String(content).trim().slice(0, 480),\n    post_order: index,\n    topic: parentData.topic,\n    angle: parentData.angle,\n    pillar_name: parentData.pillar_name\n  }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3248,
+        3008
+      ],
+      "id": "e51077de-be87-4506-823f-e77b54bc942a",
+      "name": "Code in JavaScript12"
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $json.output;\nconst posts = (raw && raw.posts) || [];\nconst topic = (raw && raw.topic) || 'Topik tidak tersedia';\n\nreturn [{\n  json: {\n    pillar_name: 'pilot_pesawat',\n    angle: $('Get a row3').first().json.angle, // sesuaikan nama node penentu angle\n    topic: topic,\n    status: 'pending_approval',\n    posts: posts // dibawa terus buat dipecah nanti, bukan buat insert\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3648,
+        2720
+      ],
+      "id": "9ec3d2de-a3e0-4898-af97-abb30be0473d",
+      "name": "Code in JavaScript13"
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = new Date();\nconst days = ['minggu','senin','selasa','rabu','kamis','jumat','sabtu'];\nconst hour = now.getHours();\nconst slotMap = { 8: '08:00', 12: '12:00', 16: '16:00' };\n\nreturn [{\n  json: {\n    day_of_week: days[now.getDay()],\n    time_slot: slotMap[hour] || '08:00'\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2272,
+        2800
+      ],
+      "id": "cba37272-9c24-468b-ae8d-7805473308d3",
+      "name": "Time Schedule1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const pendingCount = $input.all().length;\nreturn [{ json: { pending_count: pendingCount, is_full: pendingCount >= 14 } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2080,
+        3184
+      ],
+      "id": "7f5c1ae1-160a-4770-8632-2069e1e90204",
+      "name": "Code in JavaScript14"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Time Schedule1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a row3": {
+      "main": [
+        [
+          {
+            "node": "Get many rows5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows5": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript14",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If5": {
+      "main": [
+        [
+          {
+            "node": "Get a row4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a row4": {
+      "main": [
+        [
+          {
+            "node": "Get many rows6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows6": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript9": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Strategist1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Strategist1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser4": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent Strategist1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Writer1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Editor1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent Strategist1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Writer1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent Editor1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript13",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row2": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript12",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent Writer1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent Editor1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser5": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent Writer1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [
+          {
+            "node": "Create a row3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Replace Me1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Replace Me1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a row3": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript11": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser6": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent Editor1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript12": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript13": {
+      "main": [
+        [
+          {
+            "node": "Create a row2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Time Schedule1": {
+      "main": [
+        [
+          {
+            "node": "Get a row3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript14": {
+      "main": [
+        [
+          {
+            "node": "If5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "937e2039-9872-4607-a5a5-ca38a810929d",
+  "meta": {
+    "instanceId": "7c6b6f1ecf77cebc5efce23cf69ffc017dbfc74ad57e36eb39e2e5c24ed38074"
+  },
+  "id": "mQMdrbAEyhA9OLxj",
+  "tags": []
+}
